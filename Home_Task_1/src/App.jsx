@@ -1,9 +1,7 @@
-import './App.css';
+import "./App.css";
 
 function App() {
-  return (
-    <div>React</div>
-  );
+    return <div>React</div>;
 }
 
 export default App;
