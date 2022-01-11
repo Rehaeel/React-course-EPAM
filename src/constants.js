@@ -1,3 +1,21 @@
+export const BUTTON_LOGOUT = 'Logout';
+
+export const BUTTON_ADD_AUTHOR = 'Add author';
+export const BUTTON_CREATE_AUTHOR = 'Create author';
+export const BUTTON_CREATE_COURSE = 'Create course';
+export const BUTTON_DELETE_AUTHOR = 'Delete author';
+
+export const BUTTON_SHOW_COURSE = 'Show course';
+export const BUTTON_ADD_NEW_COURSE = 'Add new course';
+
+export const LABEL_ADD_COURSE_TITLE = 'Title';
+export const PLACEHOLDER_ADD_COURSE_TITLE = 'Enter title...';
+export const PLACEHOLDER_ADD_COURSE_DESCRIPTION = 'Enter description';
+export const LABEL_ADD_AUTHOR_NAME = 'Author name';
+export const PLACEHOLDER_ADD_AUTHOR_NAME = 'Enter author name...';
+export const LABEL_ADD_COURSE_DURATION = 'Duration';
+export const PLACEHOLDER_ADD_COURSE_DURATION = 'Enter duration in minutes...';
+
 export const mockedCoursesList = [
 	{
 		id: 'de5aaa59-90f5-4dbc-b8a9-aaf205c551ba',

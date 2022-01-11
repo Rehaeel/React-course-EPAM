@@ -1,6 +1,6 @@
 import Button from '../../../../common/Button/Button';
+import { BUTTON_SHOW_COURSE } from '../../../../constants';
 import classes from './CourseCard.module.css';
-import { mockedAuthorsList } from '../../../../constants';
 
 const CourseCard = (props) => {
 	const padTwoPlaces = (input) => {
@@ -29,12 +29,12 @@ const CourseCard = (props) => {
 
 	const renderAuthors = () => {
 		return props.course.authors.map((author, index) => {
-			const authorName = mockedAuthorsList.find(
+			const authorName = props.authorsList.find(
 				(auth) => auth.id === author
 			).name;
-			const isLastAuthor = () => {
-				return index + 1 === props.course.authors.length;
-			};
+
+			const isLastAuthor = () => index + 1 === props.course.authors.length;
+
 			return (
 				<span key={author}>{`${authorName}${
 					!isLastAuthor() ? ', ' : ''
@@ -57,7 +57,7 @@ const CourseCard = (props) => {
 				<h3>
 					Created: <span>{convertDate()}</span>
 				</h3>
-				<Button buttonText='Show course' />
+				<Button buttonText={BUTTON_SHOW_COURSE} />
 			</div>
 		</section>
 	);

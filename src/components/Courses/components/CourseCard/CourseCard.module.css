@@ -1,6 +1,6 @@
 .card {
 	display: grid;
-	grid-template-columns: 2fr 1fr;
+	grid-template-columns: 2fr 350px;
 	border: 2px solid green;
 	padding: 30px;
 	gap: 40px;
@@ -23,6 +23,8 @@
 
 .info > h3:first-of-type {
 	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 .description > h1 {

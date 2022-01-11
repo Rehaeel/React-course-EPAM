@@ -3,12 +3,8 @@ import Input from '../../../../common/Input/Input';
 import classes from './SearchBar.module.css';
 
 const SearchBar = (props) => {
-	const onSubmitHandler = (e) => {
-		e.preventDefault();
-		console.log(e.target);
-	};
 	return (
-		<form className={classes.bar} onSubmit={onSubmitHandler}>
+		<form className={classes.bar} onSubmit={props.onSubmitHandler}>
 			<Input
 				labelText=''
 				value={props.value}
