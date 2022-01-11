@@ -15,11 +15,17 @@ function App() {
 
 	const onCreateCourse = (course) => {
 		showAddCourse();
-		setCoursesList((oldList) => [...oldList, course]);
+
+		if (coursesList.includes(course)) setCoursesList((oldList) => [...oldList]);
+		// because of task to add to mockedCourseList - check if exist
+		else setCoursesList((oldList) => [...oldList, course]);
 	};
 
 	const onAddAuthor = (author) => {
-		setAuthorsList((prevList) => [...prevList, author]);
+		if (authorsList.includes(author))
+			setAuthorsList((prevList) => [...prevList]);
+		//because of task to add author to mockedAuthorsList - have to check if exist
+		else setAuthorsList((prevList) => [...prevList, author]);
 	};
 
 	return (

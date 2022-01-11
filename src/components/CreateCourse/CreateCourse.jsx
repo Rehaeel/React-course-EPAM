@@ -125,11 +125,9 @@ const CreateCourse = (props) => {
 			authors: courseAuthors.map((auth) => auth.id.toString()),
 		};
 
-		initialState();
-
-		props.onCreateCourse(newCourse);
 		mockedCoursesList.push(newCourse);
-		console.log(mockedAuthorsList, mockedCoursesList);
+		props.onCreateCourse(newCourse);
+		initialState();
 	};
 
 	return (
