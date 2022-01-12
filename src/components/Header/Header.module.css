@@ -1,10 +1,10 @@
 .header {
-	height: 120px;
+	height: var(--header-height);
 	width: 100%;
 	display: flex;
 	justify-content: space-between;
 	border: 2px solid orangered;
-	padding: 15px;
+	padding: calc(var(--universal-gap) * 1.5);
 }
 
 .header > div {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -22,8 +23,11 @@ import {
 	PLACEHOLDER_ADD_COURSE_DURATION,
 	PLACEHOLDER_ADD_COURSE_TITLE,
 } from '../../constants';
+import { formatDuration } from '../../helpers/formatters';
 
 const CreateCourse = (props) => {
+	const history = useHistory();
+
 	const [title, setTitle] = useState('');
 	const titleRef = useRef();
 	const [description, setDescription] = useState('');
@@ -45,14 +49,7 @@ const CreateCourse = (props) => {
 		setAuthors(props.authorsList);
 	};
 
-	const formatDuration = () => {
-		const hours = Math.trunc(duration / 60)
-			.toString()
-			.padStart(2, '0');
-		const minutes = (duration % 60).toString().padStart(2, '0');
-		setDurationOutput(` ${hours}:${minutes} `);
-	};
-	useEffect(formatDuration, [duration]);
+	useEffect(() => setDurationOutput(formatDuration(duration)), [duration]);
 
 	const createAuthor = (e) => {
 		e.preventDefault();
@@ -128,6 +125,8 @@ const CreateCourse = (props) => {
 		mockedCoursesList.push(newCourse);
 		props.onCreateCourse(newCourse);
 		initialState();
+
+		history.push('/courses');
 	};
 
 	return (
@@ -143,6 +142,7 @@ const CreateCourse = (props) => {
 					<Button
 						buttonText={BUTTON_CREATE_COURSE}
 						onClick={onSubmitAddCourse}
+						to='/courses'
 					/>
 				</div>
 				<label>

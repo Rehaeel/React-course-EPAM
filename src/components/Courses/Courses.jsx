@@ -4,10 +4,12 @@ import { useState } from 'react';
 import Button from '../../common/Button/Button';
 import classes from './Courses.module.css';
 import { BUTTON_ADD_NEW_COURSE } from '../../constants';
+import { useHistory } from 'react-router-dom/';
 
 const Courses = (props) => {
 	const [searchValue, setSearchValue] = useState('');
 	const [coursesRender, setCoursesRender] = useState(renderCourses());
+	const history = useHistory();
 
 	function renderAll() {
 		return props.coursesList.map((course) => (
@@ -22,6 +24,7 @@ const Courses = (props) => {
 	const onSearchEvent = (e) => {
 		setSearchValue(e.target.value);
 		if (e.target.value === '') return setCoursesRender(renderAll());
+		setCoursesRender(renderCourses(e.target.value.toLowerCase()));
 	};
 
 	const onSubmitHandler = (e) => {
@@ -58,7 +61,7 @@ const Courses = (props) => {
 
 				<Button
 					buttonText={BUTTON_ADD_NEW_COURSE}
-					onClick={props.onAddCourse}
+					onClick={() => history.push('/courses/add')}
 				/>
 			</section>
 			{coursesRender}

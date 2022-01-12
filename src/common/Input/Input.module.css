@@ -1,6 +1,6 @@
 .input {
     border: 1.5px solid rgb(122, 39, 0);
     width: 100%;
-    margin-top: 5px;
-    padding: 5px 10px;
+    margin-top: calc(var(--universal-gap) / 2);
+    padding: calc(var(--universal-gap) / 2) var(--universal-gap);
 }

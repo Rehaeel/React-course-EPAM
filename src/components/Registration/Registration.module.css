@@ -1,0 +1,15 @@
+.registration * {
+    width: 300px;
+}
+
+.registration > form > button {
+    width: fit-content;
+}
+
+.registration > h1:first-of-type {
+    text-align: center;
+}
+
+.registration > p {
+    text-align: center;
+}

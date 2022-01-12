@@ -1,14 +1,14 @@
 .bar {
 	display: inline-flex;
 	align-items: center;
-	gap: 20px;
+	gap: calc(var(--universal-gap) * 2)
 }
 
 .bar > label > input {
 	width: 400px;
 	border: 2px solid yellow;
 	box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1);
-	padding: 10px 0 10px 20px;
+	padding: var(--universal-gap) 0 var(--universal-gap) calc(var(--universal-gap) * 2);
 }
 
 .bar > label > input::placeholder {

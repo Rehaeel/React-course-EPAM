@@ -10,7 +10,7 @@ const Input = (props) => {
 				value={props.value}
 				placeholder={props.placeholderText}
 				onChange={props.onChange}
-				type='text'
+				type={props.type ?? 'text'}
 			/>
 		</label>
 	);

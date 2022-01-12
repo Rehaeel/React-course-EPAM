@@ -1,8 +1,8 @@
 .courses {
 	display: flex;
 	flex-direction: column;
-	gap: 20px;
-	margin: 20px;
+	gap: calc(var(--universal-gap) * 2);
+	margin: calc(var(--universal-gap) * 2);
 }
 
 .courses-navigation {
