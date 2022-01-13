@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
@@ -54,7 +55,10 @@ const Login = ({ loginName, isLogged }) => {
 				const token = response.data.result;
 				loginName(response.data.user.name);
 				isLogged(true);
-				return window.localStorage.setItem('token', token);
+				return (
+					window.localStorage.setItem('token', token),
+					window.localStorage.setItem('name', account.name)
+				);
 			}
 			alert(response);
 		})();
@@ -84,6 +88,11 @@ const Login = ({ loginName, isLogged }) => {
 			</p>
 		</CenteredContainer>
 	);
+};
+
+Login.propTypes = {
+	loginName: PropTypes.func,
+	isLogged: PropTypes.func,
 };
 
 export default Login;

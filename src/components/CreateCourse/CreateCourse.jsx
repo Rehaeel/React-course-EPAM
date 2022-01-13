@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import { v4 as uuidv4 } from 'uuid';
 
 import classes from './CreateCourse.module.css';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
-import { formatCreationDate } from '../../helpers/dateGeneratop';
+import { formatCreationDate } from '../../helpers/dateGenerator';
 
 import {
 	BUTTON_ADD_AUTHOR,
@@ -217,6 +218,17 @@ const CreateCourse = (props) => {
 			</section>
 		</section>
 	);
+};
+
+CreateCourse.propTypes = {
+	authorsList: PropTypes.arrayOf(
+		PropTypes.exact({
+			id: PropTypes.string,
+			name: PropTypes.string,
+		})
+	),
+	onAddAuthor: PropTypes.func,
+	onCreateCourse: PropTypes.func,
 };
 
 export default CreateCourse;

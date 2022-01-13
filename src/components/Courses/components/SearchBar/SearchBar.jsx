@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 import Button from '../../../../common/Button/Button';
 import Input from '../../../../common/Input/Input';
 import classes from './SearchBar.module.css';
@@ -14,6 +16,12 @@ const SearchBar = (props) => {
 			<Button type='submit' buttonText='Search' />
 		</form>
 	);
+};
+
+SearchBar.propTypes = {
+	onSubmitHandler: PropTypes.func,
+	value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+	onChange: PropTypes.func,
 };
 
 export default SearchBar;

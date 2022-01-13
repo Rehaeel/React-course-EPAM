@@ -1,11 +1,13 @@
+import { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
+
 import styles from './Header.module.css';
 import Button from '../../common/Button/Button';
 import { Logo } from './components/Logo/Logo';
 import { BUTTON_LOGOUT } from '../../constants';
-import { useHistory } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 
-const Header = ({ userName, onLogout, isLogged }) => {
+const Header = ({ onLogout, isLogged }) => {
 	const history = useHistory();
 	const [shouldRender, setShouldRender] = useState(false);
 
@@ -20,6 +22,7 @@ const Header = ({ userName, onLogout, isLogged }) => {
 	const onLogoutHandler = () => {
 		setShouldRender(false);
 		window.localStorage.removeItem('token');
+		window.localStorage.removeItem('name');
 		onLogout(false);
 		history.push('/login');
 	};
@@ -29,12 +32,17 @@ const Header = ({ userName, onLogout, isLogged }) => {
 			<Logo />
 			{shouldRender && (
 				<div>
-					<h1>{userName}</h1>
+					<h1>{window.localStorage.getItem('name')}</h1>
 					<Button buttonText={BUTTON_LOGOUT} onClick={onLogoutHandler} />
 				</div>
 			)}
 		</header>
 	);
+};
+
+Header.propTypes = {
+	onLogout: PropTypes.func,
+	isLogged: PropTypes.bool,
 };
 
 export default Header;
