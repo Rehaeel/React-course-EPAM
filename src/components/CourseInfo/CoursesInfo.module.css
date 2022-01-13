@@ -26,14 +26,14 @@
     line-height: 1.4em;
 }
 
-.grid-info > div {
+.grid-info > ul {
     display: flex;
     flex-direction: column;
     gap: var(--universal-gap);
 }
 
-.grid-info > div > h3 {
-    font-weight: normal;
+.grid-info li {
+    font-size: 1.1em;
 }
 
 .authors > p {

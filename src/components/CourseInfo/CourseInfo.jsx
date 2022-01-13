@@ -1,4 +1,3 @@
-import { findByPlaceholderText } from '@testing-library/react';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { mockedAuthorsList, mockedCoursesList } from '../../constants';
@@ -18,13 +17,17 @@ const CourseInfo = () => {
 		);
 		setCourse(...fetchedCourse);
 		setIsFetched(true);
-	}, []);
+	}, [courseId]);
 
-	const renderAuthors = () => {
-		return course.authors.map((author) => {
-			return <p>{author}</p>;
+	const renderAuthors = () =>
+		isFetched &&
+		course.authors.map((author) => {
+			const fetchedAuthor = mockedAuthorsList.find(
+				(auth) => auth.id === author
+			);
+
+			return <p key={fetchedAuthor.id}>{fetchedAuthor.name}</p>;
 		});
-	};
 
 	return (
 		<section className={classes['course-info']}>
@@ -32,29 +35,21 @@ const CourseInfo = () => {
 			<h1>{course.title}</h1>
 			<CenteredContainer className={classes['grid-info']}>
 				<p>{course.description}</p>
-				<div>
-					<h3>
+				<ul>
+					<li>
 						<b>ID:</b> {isFetched && course.id}
-					</h3>
-					<h3>
+					</li>
+					<li>
 						<b>Duration:</b>{' '}
 						{isFetched && `${formatDuration(course.duration)} hours`}
-					</h3>
-					<h3>
+					</li>
+					<li>
 						<b>Created:</b> {isFetched && convertDate(course.creationDate)}
-					</h3>
-					<h3 className={classes.authors}>
-						<b>Authors:</b>{' '}
-						{isFetched &&
-							course.authors.map((author) => {
-								const fetchedAuthor = mockedAuthorsList.find(
-									(auth) => auth.id === author
-								);
-
-								return <p key={fetchedAuthor.id}>{fetchedAuthor.name}</p>;
-							})}
-					</h3>
-				</div>
+					</li>
+					<li className={classes.authors}>
+						<b>Authors:</b> {renderAuthors()}
+					</li>
+				</ul>
 			</CenteredContainer>
 		</section>
 	);
