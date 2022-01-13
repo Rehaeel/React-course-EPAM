@@ -9,21 +9,7 @@ import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 import { formatCreationDate } from '../../helpers/dateGenerator';
 
-import {
-	BUTTON_ADD_AUTHOR,
-	BUTTON_CREATE_AUTHOR,
-	BUTTON_CREATE_COURSE,
-	BUTTON_DELETE_AUTHOR,
-	LABEL_ADD_AUTHOR_NAME,
-	LABEL_ADD_COURSE_DURATION,
-	LABEL_ADD_COURSE_TITLE,
-	mockedAuthorsList,
-	mockedCoursesList,
-	PLACEHOLDER_ADD_AUTHOR_NAME,
-	PLACEHOLDER_ADD_COURSE_DESCRIPTION,
-	PLACEHOLDER_ADD_COURSE_DURATION,
-	PLACEHOLDER_ADD_COURSE_TITLE,
-} from '../../constants';
+import * as constants from '../../constants';
 import { formatDuration } from '../../helpers/formatters';
 
 const CreateCourse = (props) => {
@@ -69,7 +55,7 @@ const CreateCourse = (props) => {
 			return alert('Author name should be at least 2 characters');
 
 		authorNameRef.current.value = '';
-		mockedAuthorsList.push(author);
+		constants.mockedAuthorsList.push(author);
 		props.onAddAuthor(author);
 
 		//because of task to add author to mockedAuthorsList - have to check if exist
@@ -123,7 +109,7 @@ const CreateCourse = (props) => {
 			authors: courseAuthors.map((auth) => auth.id.toString()),
 		};
 
-		mockedCoursesList.push(newCourse);
+		constants.mockedCoursesList.push(newCourse);
 		props.onCreateCourse(newCourse);
 		initialState();
 
@@ -135,13 +121,13 @@ const CreateCourse = (props) => {
 			<section className={classes.info}>
 				<div className={classes.title}>
 					<Input
-						labelText={LABEL_ADD_COURSE_TITLE}
+						labelText={constants.LABEL_ADD_COURSE_TITLE}
 						onChange={(e) => setTitle(e.target.value)}
-						placeholderText={PLACEHOLDER_ADD_COURSE_TITLE}
+						placeholderText={constants.PLACEHOLDER_ADD_COURSE_TITLE}
 						thisRef={titleRef}
 					/>
 					<Button
-						buttonText={BUTTON_CREATE_COURSE}
+						buttonText={constants.BUTTON_CREATE_COURSE}
 						onClick={onSubmitAddCourse}
 						to='/courses'
 					/>
@@ -149,7 +135,7 @@ const CreateCourse = (props) => {
 				<label>
 					Description
 					<textarea
-						placeholder={PLACEHOLDER_ADD_COURSE_DESCRIPTION}
+						placeholder={constants.PLACEHOLDER_ADD_COURSE_DESCRIPTION}
 						onChange={(e) => setDescription(e.target.value)}
 						ref={descriptionRef}
 					/>
@@ -162,19 +148,22 @@ const CreateCourse = (props) => {
 						<h3>Add author</h3>
 						<form onSubmit={createAuthor}>
 							<Input
-								labelText={LABEL_ADD_AUTHOR_NAME}
-								placeholderText={PLACEHOLDER_ADD_AUTHOR_NAME}
+								labelText={constants.LABEL_ADD_AUTHOR_NAME}
+								placeholderText={constants.PLACEHOLDER_ADD_AUTHOR_NAME}
 								thisRef={authorNameRef}
 							/>
-							<Button buttonText={BUTTON_CREATE_AUTHOR} buttonType='submit' />
+							<Button
+								buttonText={constants.BUTTON_CREATE_AUTHOR}
+								buttonType='submit'
+							/>
 						</form>
 					</div>
 
 					<div>
 						<h3>Duration</h3>
 						<Input
-							labelText={LABEL_ADD_COURSE_DURATION}
-							placeholderText={PLACEHOLDER_ADD_COURSE_DURATION}
+							labelText={constants.LABEL_ADD_COURSE_DURATION}
+							placeholderText={constants.PLACEHOLDER_ADD_COURSE_DURATION}
 							onChange={(e) => setDuration(e.target.value)}
 							thisRef={durationRef}
 						/>
@@ -195,7 +184,7 @@ const CreateCourse = (props) => {
 							<li key={auth.id}>
 								{auth.name}
 								<Button
-									buttonText={BUTTON_ADD_AUTHOR}
+									buttonText={constants.BUTTON_ADD_AUTHOR}
 									onClick={() => addCourseAuthor(auth.id)}
 								/>
 							</li>
@@ -208,7 +197,7 @@ const CreateCourse = (props) => {
 							<li key={auth.id}>
 								{auth.name}
 								<Button
-									buttonText={BUTTON_DELETE_AUTHOR}
+									buttonText={constants.BUTTON_DELETE_AUTHOR}
 									onClick={() => removeCourseAuthor(auth.id)}
 								/>
 							</li>

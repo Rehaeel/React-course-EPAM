@@ -8,14 +8,7 @@ import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 import CenteredContainer from '../../helpers/CenteredContainer/CenteredContainer';
 
-import {
-	BACKEND_URL,
-	BUTTON_LOGIN,
-	LABEL_LOGIN_PASSWORD,
-	LABLE_LOGIN_EMAIL,
-	PLACEHOLDER_LOGIN_EMAIL,
-	PLACEHOLDER_LOGIN_PASSWORD,
-} from '../../constants';
+import * as constants from '../../constants';
 
 const Login = ({ loginName, isLogged }) => {
 	const history = useHistory();
@@ -41,7 +34,7 @@ const Login = ({ loginName, isLogged }) => {
 		};
 
 		const result = axios
-			.post(`${BACKEND_URL}/login`, account, headers)
+			.post(`${constants.BACKEND_URL}/login`, account, headers)
 			.then((result) => {
 				history.push('/courses');
 				return result;
@@ -69,18 +62,18 @@ const Login = ({ loginName, isLogged }) => {
 			<form className='centered-container' onSubmit={onLogin}>
 				<Input labelText='Name' placeholderText='name' thisRef={nameRef} />
 				<Input
-					labelText={LABLE_LOGIN_EMAIL}
-					placeholderText={PLACEHOLDER_LOGIN_EMAIL}
+					labelText={constants.LABLE_LOGIN_EMAIL}
+					placeholderText={constants.PLACEHOLDER_LOGIN_EMAIL}
 					type='email'
 					thisRef={emailRef}
 				/>
 				<Input
-					labelText={LABEL_LOGIN_PASSWORD}
-					placeholderText={PLACEHOLDER_LOGIN_PASSWORD}
+					labelText={constants.LABEL_LOGIN_PASSWORD}
+					placeholderText={constants.PLACEHOLDER_LOGIN_PASSWORD}
 					type='password'
 					thisRef={passwordRef}
 				/>
-				<Button buttonText={BUTTON_LOGIN} buttonType='submit' />
+				<Button buttonText={constants.BUTTON_LOGIN} buttonType='submit' />
 			</form>
 			<p>
 				If you not have an account you can{' '}
