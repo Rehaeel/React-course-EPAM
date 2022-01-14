@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 
 import Button from '../../../../common/Button/Button';
 import Input from '../../../../common/Input/Input';
+import * as constants from '../../../../constants';
 import classes from './SearchBar.module.css';
 
 const SearchBar = (props) => {
@@ -10,10 +11,10 @@ const SearchBar = (props) => {
 			<Input
 				labelText=''
 				value={props.value}
-				placeholderText='Enter course name or ID'
+				placeholderText={constants.PLACEHOLDER_SEARCHBAR_INPUT}
 				onChange={props.onChange}
 			/>
-			<Button type='submit' buttonText='Search' />
+			<Button type='submit' buttonText={constants.BUTTON_SEARCHBAR_INPUT} />
 		</form>
 	);
 };

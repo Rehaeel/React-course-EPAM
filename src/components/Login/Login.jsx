@@ -1,17 +1,23 @@
 import { useEffect, useRef } from 'react';
-import { useHistory } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import axios from 'axios';
-import PropTypes from 'prop-types';
 
+import CenteredContainer from '../../helpers/CenteredContainer/CenteredContainer';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
-import CenteredContainer from '../../helpers/CenteredContainer/CenteredContainer';
 
 import * as constants from '../../constants';
 
-const Login = ({ loginName, isLogged }) => {
+import { actionLogIn } from '../../store/user/actionCreators';
+import { actionFetchAllAuthors } from '../../store/authors/actionCreators';
+import { actionFetchAllCourses } from '../../store/courses/actionCreators';
+import { fetchedAuthors, fetchedCourses } from '../../store/services';
+
+const Login = () => {
 	const history = useHistory();
+	const dispatch = useDispatch();
+
 	const emailRef = useRef();
 	const passwordRef = useRef();
 	const nameRef = useRef();
@@ -35,27 +41,31 @@ const Login = ({ loginName, isLogged }) => {
 
 		const result = axios
 			.post(`${constants.BACKEND_URL}/login`, account, headers)
-			.then((result) => {
-				history.push('/courses');
-				return result;
-			})
 			.catch((error) => error.response.data.result);
 
 		(async () => {
 			const response = await result;
 
-			if (response.status === 201) {
-				const token = response.data.result;
-				loginName(response.data.user.name);
-				isLogged(true);
-				return (
-					window.localStorage.setItem('token', token),
-					window.localStorage.setItem('name', account.name)
-				);
-			}
-			alert(response);
+			if (response.status !== 201) return alert(response);
+
+			const token = response.data.result;
+			const { email, name } = response.data.user;
+
+			dispatch(actionLogIn(name, email, token));
+			fetchedCourses.then((res) =>
+				dispatch(actionFetchAllCourses(res.data.result))
+			);
+			fetchedAuthors.then((res) => {
+				dispatch(actionFetchAllAuthors(res.data.result));
+			});
+
+			window.localStorage.setItem('token', token);
+			window.localStorage.setItem('name', account.name);
+
+			history.push('/courses');
 		})();
 	};
+
 	return (
 		<CenteredContainer isFullHeight={true} className={'form-formatter'}>
 			<h1>Login</h1>
@@ -81,11 +91,6 @@ const Login = ({ loginName, isLogged }) => {
 			</p>
 		</CenteredContainer>
 	);
-};
-
-Login.propTypes = {
-	loginName: PropTypes.func,
-	isLogged: PropTypes.func,
 };
 
 export default Login;

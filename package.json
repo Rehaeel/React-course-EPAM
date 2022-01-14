@@ -29,7 +29,7 @@
         "prepublish": "npm run eslint:fix"
     },
     "eslintConfig": {
-        "extends": [ 
+        "extends": [
             "react-app",
             "react-app/jest"
         ]
