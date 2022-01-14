@@ -33,7 +33,7 @@ function App() {
 				dispatch(actionFetchAllAuthors(res.data.result));
 			});
 		}
-	}, []);
+	}, [hasToken, dispatch]);
 
 	return (
 		<Router>

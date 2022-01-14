@@ -29,7 +29,7 @@ const CourseCard = ({ course }) => {
 				]);
 			});
 		}
-	}, [authorsList]);
+	}, [authorsList, course.authors]);
 
 	const isLastAuthor = (i) => i + 1 === course.authors.length;
 
