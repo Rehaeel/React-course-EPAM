@@ -15,7 +15,7 @@ const ScrollToTop = ({ history }) => {
 };
 
 ScrollToTop.propTypes = {
-	history: PropTypes.string,
+	history: PropTypes.object,
 };
 
 export default withRouter(ScrollToTop);
