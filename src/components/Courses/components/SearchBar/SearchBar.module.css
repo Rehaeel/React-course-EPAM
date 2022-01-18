@@ -1,0 +1,16 @@
+.bar {
+	display: inline-flex;
+	align-items: center;
+	gap: 20px;
+}
+
+.bar > label > input {
+	width: 400px;
+	border: 2px solid yellow;
+	box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1);
+	padding: 10px 0 10px 20px;
+}
+
+.bar > label > input::placeholder {
+	color: rgba(51, 51, 51, 0.384);
+}

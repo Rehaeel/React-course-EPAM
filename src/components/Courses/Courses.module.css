@@ -1,0 +1,13 @@
+.courses {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	margin: 20px;
+}
+
+.courses-navigation {
+	width: 100%;
+	display: inline-flex;
+	justify-content: space-between;
+}
+

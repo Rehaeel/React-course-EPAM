@@ -1,0 +1,19 @@
+.header {
+	height: 120px;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	border: 2px solid orangered;
+	padding: 15px;
+}
+
+.header > div {
+	display: inline-flex;
+	align-items: center;
+	gap: 40px;
+}
+
+.header > div > h1 {
+	font-weight: 700;
+	font-size: 120%;
+}
