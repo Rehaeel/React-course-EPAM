@@ -14,7 +14,10 @@ const CenteredContainer = ({ children, isFullHeight, className }) => {
 };
 
 CenteredContainer.propTypes = {
-	children: PropTypes.arrayOf(PropTypes.element),
+	children: PropTypes.oneOfType([
+		PropTypes.arrayOf(PropTypes.element),
+		PropTypes.object,
+	]),
 	isFullHeight: PropTypes.bool,
 	className: PropTypes.string,
 };

@@ -2,9 +2,10 @@ import * as actions from './actionTypes';
 
 const userInitialState = {
 	isAuth: window.localStorage.getItem('token') ? true : false,
-	name: window.localStorage.getItem('name') ?? '',
+	name: '',
 	email: '',
 	token: window.localStorage.getItem('token') ?? '',
+	role: '',
 };
 
 export const userReducer = (state = userInitialState, action) => {
@@ -13,9 +14,9 @@ export const userReducer = (state = userInitialState, action) => {
 			return {
 				...state,
 				isAuth: true,
-				name: action.payload.name,
 				email: action.payload.email,
 				token: action.payload.token,
+				name: action.payload.name,
 			};
 		case actions.LOG_OUT:
 			return {
@@ -24,6 +25,11 @@ export const userReducer = (state = userInitialState, action) => {
 				name: '',
 				email: '',
 				token: '',
+			};
+		case actions.GET_USER:
+			return {
+				...state,
+				role: action.payload.role,
 			};
 		default:
 			return state;

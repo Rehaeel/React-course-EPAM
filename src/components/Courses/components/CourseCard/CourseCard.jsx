@@ -9,27 +9,15 @@ import classes from './CourseCard.module.css';
 import Button from '../../../../common/Button/Button';
 import { formatDuration, convertDate } from '../../../../helpers/formatters';
 import * as constants from '../../../../constants';
-import { actionDeleteCourse } from '../../../../store/courses/actionCreators';
-import { selectAuthors } from '../../../../store/selector';
+import { selectAuthors, selectUser } from '../../../../store/selector';
+import { deleteCourseThunk } from '../../../../store/courses/thunk';
 
 const CourseCard = ({ course }) => {
 	const history = useHistory();
 	const dispatch = useDispatch();
+	const isAdmin = useSelector(selectUser).role === 'admin';
 
-	const [authors, setAuthors] = useState([]);
 	const authorsList = useSelector(selectAuthors);
-
-	useEffect(() => {
-		const isListFetched = Boolean(authorsList[0].name);
-		if (isListFetched) {
-			course.authors.forEach((auth) => {
-				setAuthors((oldArr) => [
-					...oldArr,
-					authorsList.find((a) => a.id === auth).name,
-				]);
-			});
-		}
-	}, [authorsList, course.authors]);
 
 	const isLastAuthor = (i) => i + 1 === course.authors.length;
 
@@ -42,13 +30,17 @@ const CourseCard = ({ course }) => {
 			<div className={classes.info}>
 				<label>
 					<b>Authors:</b> {''}
-					{authors.map((author, index) => {
-						return (
+					{course.authors
+						.map((auth) => {
+							const foundAuthor = authorsList.find((a) => auth === a.id);
+							if (!foundAuthor) return;
+							else return foundAuthor.name;
+						})
+						.map((author, index) => (
 							<span key={course.authors[index]}>{`${author}${
 								!isLastAuthor(index) ? ', ' : ''
 							}`}</span>
-						);
-					})}
+						))}
 				</label>
 				<label>
 					<b>Duration: </b>
@@ -62,11 +54,18 @@ const CourseCard = ({ course }) => {
 						buttonText={constants.BUTTON_SHOW_COURSE}
 						onClick={() => history.push(`/courses/${course.id}`)}
 					/>
-					<Button buttonText={constants.BUTTON_EDIT} />
-					<Button
-						buttonText={constants.BUTTON_DELETE}
-						onClick={() => dispatch(actionDeleteCourse(course.id))}
-					/>
+					{isAdmin && (
+						<>
+							<Button
+								buttonText={constants.BUTTON_EDIT}
+								onClick={() => history.push(`/courses/update/${course.id}`)}
+							/>
+							<Button
+								buttonText={constants.BUTTON_DELETE}
+								onClick={() => dispatch(deleteCourseThunk(course.id))}
+							/>
+						</>
+					)}
 				</div>
 			</div>
 		</section>
