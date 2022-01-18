@@ -11,7 +11,7 @@ const CourseInfo = () => {
 	const { courseId } = useParams();
 	const authors = useSelector(selectAuthors);
 	const courses = useSelector(selectCourses);
-	const [filteredCourse] = courses.filter((course) => course.id === courseId);
+	const [filteredCourse] = courses.find((course) => course.id === courseId);
 
 	const renderAuthors = () =>
 		filteredCourse.authors.map((author) => {
