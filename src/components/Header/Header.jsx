@@ -1,26 +1,24 @@
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { actionLogOut } from '../../store/user/actionCreators';
-
 import styles from './Header.module.css';
 import Button from '../../common/Button/Button';
 import { Logo } from './components/Logo/Logo';
 import { BUTTON_LOGOUT } from '../../constants';
 import { selectUser } from '../../store/selector';
+import { logOutUserThunk } from '../../store/user/thunk';
+import { handdleError } from '../../store/services';
 
 const Header = () => {
 	const history = useHistory();
 	const dispatch = useDispatch();
-
 	const user = useSelector(selectUser);
+	const token = window.localStorage.getItem('token');
 
 	const onLogoutHandler = () => {
-		dispatch(actionLogOut());
-
-		window.localStorage.removeItem('token');
-		window.localStorage.removeItem('name');
-		history.push('/login');
+		dispatch(logOutUserThunk(token))
+			.then(() => history.push('/login'))
+			.catch(handdleError);
 	};
 
 	return (

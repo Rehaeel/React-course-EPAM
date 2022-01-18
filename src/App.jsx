@@ -9,31 +9,40 @@ import {
 
 import CourseInfo from './components/CourseInfo/CourseInfo';
 import Courses from './components/Courses/Courses';
-import CreateCourse from './components/CreateCourse/CreateCourse';
+import CourseForm from './components/CourseForm/CourseForm';
 import Header from './components/Header/Header';
 import Login from './components/Login/Login';
 import Registration from './components/Registration/Registration';
 import ScrollToTop from './helpers/ScrollToTop';
+import PrivateRoute from './components/PrivateRouter/PrivateRouter';
 
 import { actionFetchAllAuthors } from './store/authors/actionCreators';
 import { actionFetchAllCourses } from './store/courses/actionCreators';
-import { fetchedAuthors, fetchedCourses } from './store/services';
+import * as queries from './store/services';
+import { getCurrentUserThunk } from './store/user/thunk';
 
 function App() {
 	const dispatch = useDispatch();
 
-	const hasToken = Boolean(window.localStorage.getItem('token'));
+	const token = window.localStorage.getItem('token');
+	const hasToken = Boolean(token);
 
 	useEffect(() => {
 		if (hasToken) {
-			fetchedCourses.then((res) =>
-				dispatch(actionFetchAllCourses(res.data.result))
-			);
-			fetchedAuthors.then((res) => {
-				dispatch(actionFetchAllAuthors(res.data.result));
-			});
+			dispatch(getCurrentUserThunk(token)).catch(queries.handdleError);
+
+			queries
+				.fetchedCoursesQuery()
+				.then((res) => dispatch(actionFetchAllCourses(res.data.result)))
+				.catch(queries.handdleError);
+			queries
+				.fetchedAuthorsQuery()
+				.then((res) => {
+					dispatch(actionFetchAllAuthors(res.data.result));
+				})
+				.catch(queries.handdleError);
 		}
-	}, [hasToken, dispatch]);
+	}, [hasToken, dispatch, token]);
 
 	return (
 		<Router>
@@ -55,9 +64,12 @@ function App() {
 					<Courses />
 				</Route>
 
-				<Route path='/courses/add'>
-					<CreateCourse />
-				</Route>
+				<PrivateRoute exact path='/courses/add' component={CourseForm} />
+				<PrivateRoute
+					exact
+					path='/courses/update/:courseId'
+					component={CourseForm}
+				/>
 
 				<Route path='/courses/:courseId'>
 					<CourseInfo />

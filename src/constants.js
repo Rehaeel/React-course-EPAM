@@ -5,6 +5,7 @@ export const BUTTON_LOGOUT = 'Logout';
 export const BUTTON_ADD_AUTHOR = 'Add author';
 export const BUTTON_CREATE_AUTHOR = 'Create author';
 export const BUTTON_CREATE_COURSE = 'Create course';
+export const BUTTON_UPDATE_COURSE = 'Update course';
 export const BUTTON_DELETE_AUTHOR = 'Delete author';
 export const BUTTON_REGISTER = 'Registration';
 
