@@ -16,7 +16,7 @@ function App() {
 	const onCreateCourse = (course) => {
 		showAddCourse();
 
-		if (coursesList.includes(course)) setCoursesList((oldList) => [...oldList]);
+		if (coursesList.includes(course)) return;
 		// because of task to add to mockedCourseList - check if exist
 		else setCoursesList((oldList) => [...oldList, course]);
 	};
