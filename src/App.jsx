@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import {
 	BrowserRouter as Router,
 	Switch,
 	Route,
 	Redirect,
-	useHistory,
 } from 'react-router-dom';
 
 import CourseInfo from './components/CourseInfo/CourseInfo';
@@ -13,58 +13,50 @@ import CreateCourse from './components/CreateCourse/CreateCourse';
 import Header from './components/Header/Header';
 import Login from './components/Login/Login';
 import Registration from './components/Registration/Registration';
-import { mockedAuthorsList, mockedCoursesList } from './constants';
+import ScrollToTop from './helpers/ScrollToTop';
+
+import { actionFetchAllAuthors } from './store/authors/actionCreators';
+import { actionFetchAllCourses } from './store/courses/actionCreators';
+import { fetchedAuthors, fetchedCourses } from './store/services';
 
 function App() {
-	const history = useHistory();
+	const dispatch = useDispatch();
 
-	const [coursesList, setCoursesList] = useState(mockedCoursesList);
-	const [authorsList, setAuthorsList] = useState(mockedAuthorsList);
-	const [userName, setUserName] = useState('');
+	const hasToken = Boolean(window.localStorage.getItem('token'));
 
-	const [isLogged, setIsLogged] = useState(
-		Boolean(window.localStorage.getItem('token'))
-	);
-
-	const onCreateCourse = (course) => {
-		if (coursesList.includes(course)) setCoursesList((oldList) => [...oldList]);
-		// because of task to add to mockedCourseList - check if exist
-		else setCoursesList((oldList) => [...oldList, course]);
-		history.push('/courses');
-	};
-
-	const onAddAuthor = (author) => {
-		if (authorsList.includes(author))
-			setAuthorsList((prevList) => [...prevList]);
-		//because of task to add author to mockedAuthorsList - have to check if exist
-		else setAuthorsList((prevList) => [...prevList, author]);
-	};
+	useEffect(() => {
+		if (hasToken) {
+			fetchedCourses.then((res) =>
+				dispatch(actionFetchAllCourses(res.data.result))
+			);
+			fetchedAuthors.then((res) => {
+				dispatch(actionFetchAllAuthors(res.data.result));
+			});
+		}
+	}, [hasToken, dispatch]);
 
 	return (
 		<Router>
-			<Header userName={userName} onLogout={setIsLogged} isLogged={isLogged} />
+			<ScrollToTop />
+			<Header />
 			<Switch>
 				<Route exact path='/'>
-					{isLogged ? <Redirect to='/courses' /> : <Redirect to='/login' />}
+					{hasToken ? <Redirect to='/courses' /> : <Redirect to='/login' />}
 				</Route>
 				<Route path='/registration'>
 					<Registration />
 				</Route>
 
 				<Route path='/login'>
-					<Login loginName={setUserName} isLogged={setIsLogged} />
+					<Login />
 				</Route>
 
 				<Route exact path='/courses'>
-					<Courses coursesList={coursesList} authorsList={authorsList} />
+					<Courses />
 				</Route>
 
 				<Route path='/courses/add'>
-					<CreateCourse
-						authorsList={authorsList}
-						onCreateCourse={onCreateCourse}
-						onAddAuthor={onAddAuthor}
-					/>
+					<CreateCourse />
 				</Route>
 
 				<Route path='/courses/:courseId'>

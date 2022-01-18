@@ -1,24 +1,23 @@
 import { useEffect, useRef } from 'react';
-import { useHistory } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import axios from 'axios';
-import PropTypes from 'prop-types';
 
+import CenteredContainer from '../../helpers/CenteredContainer/CenteredContainer';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
-import CenteredContainer from '../../helpers/CenteredContainer/CenteredContainer';
 
-import {
-	BACKEND_URL,
-	BUTTON_LOGIN,
-	LABEL_LOGIN_PASSWORD,
-	LABLE_LOGIN_EMAIL,
-	PLACEHOLDER_LOGIN_EMAIL,
-	PLACEHOLDER_LOGIN_PASSWORD,
-} from '../../constants';
+import * as constants from '../../constants';
 
-const Login = ({ loginName, isLogged }) => {
+import { actionLogIn } from '../../store/user/actionCreators';
+import { actionFetchAllAuthors } from '../../store/authors/actionCreators';
+import { actionFetchAllCourses } from '../../store/courses/actionCreators';
+import { fetchedAuthors, fetchedCourses } from '../../store/services';
+
+const Login = () => {
 	const history = useHistory();
+	const dispatch = useDispatch();
+
 	const emailRef = useRef();
 	const passwordRef = useRef();
 	const nameRef = useRef();
@@ -41,46 +40,50 @@ const Login = ({ loginName, isLogged }) => {
 		};
 
 		const result = axios
-			.post(`${BACKEND_URL}/login`, account, headers)
-			.then((result) => {
-				history.push('/courses');
-				return result;
-			})
+			.post(`${constants.BACKEND_URL}/login`, account, headers)
 			.catch((error) => error.response.data.result);
 
 		(async () => {
 			const response = await result;
 
-			if (response.status === 201) {
-				const token = response.data.result;
-				loginName(response.data.user.name);
-				isLogged(true);
-				return (
-					window.localStorage.setItem('token', token),
-					window.localStorage.setItem('name', account.name)
-				);
-			}
-			alert(response);
+			if (response.status !== 201) return alert(response);
+
+			const token = response.data.result;
+			const { email, name } = response.data.user;
+
+			dispatch(actionLogIn(name, email, token));
+			fetchedCourses.then((res) =>
+				dispatch(actionFetchAllCourses(res.data.result))
+			);
+			fetchedAuthors.then((res) => {
+				dispatch(actionFetchAllAuthors(res.data.result));
+			});
+
+			window.localStorage.setItem('token', token);
+			window.localStorage.setItem('name', account.name);
+
+			history.push('/courses');
 		})();
 	};
+
 	return (
 		<CenteredContainer isFullHeight={true} className={'form-formatter'}>
 			<h1>Login</h1>
 			<form className='centered-container' onSubmit={onLogin}>
 				<Input labelText='Name' placeholderText='name' thisRef={nameRef} />
 				<Input
-					labelText={LABLE_LOGIN_EMAIL}
-					placeholderText={PLACEHOLDER_LOGIN_EMAIL}
+					labelText={constants.LABLE_LOGIN_EMAIL}
+					placeholderText={constants.PLACEHOLDER_LOGIN_EMAIL}
 					type='email'
 					thisRef={emailRef}
 				/>
 				<Input
-					labelText={LABEL_LOGIN_PASSWORD}
-					placeholderText={PLACEHOLDER_LOGIN_PASSWORD}
+					labelText={constants.LABEL_LOGIN_PASSWORD}
+					placeholderText={constants.PLACEHOLDER_LOGIN_PASSWORD}
 					type='password'
 					thisRef={passwordRef}
 				/>
-				<Button buttonText={BUTTON_LOGIN} buttonType='submit' />
+				<Button buttonText={constants.BUTTON_LOGIN} buttonType='submit' />
 			</form>
 			<p>
 				If you not have an account you can{' '}
@@ -88,11 +91,6 @@ const Login = ({ loginName, isLogged }) => {
 			</p>
 		</CenteredContainer>
 	);
-};
-
-Login.propTypes = {
-	loginName: PropTypes.func,
-	isLogged: PropTypes.func,
 };
 
 export default Login;

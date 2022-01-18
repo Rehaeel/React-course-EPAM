@@ -1,49 +1,73 @@
+import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+
 import PropTypes from 'prop-types';
 
 import classes from './CourseCard.module.css';
 
 import Button from '../../../../common/Button/Button';
-import { BUTTON_SHOW_COURSE } from '../../../../constants';
 import { formatDuration, convertDate } from '../../../../helpers/formatters';
+import * as constants from '../../../../constants';
+import { actionDeleteCourse } from '../../../../store/courses/actionCreators';
+import { selectAuthors } from '../../../../store/selector';
 
-const CourseCard = (props) => {
+const CourseCard = ({ course }) => {
 	const history = useHistory();
+	const dispatch = useDispatch();
 
-	const renderAuthors = () => {
-		return props.course.authors.map((author, index) => {
-			const authorName = props.authorsList.find(
-				(auth) => auth.id === author
-			).name;
+	const [authors, setAuthors] = useState([]);
+	const authorsList = useSelector(selectAuthors);
 
-			const isLastAuthor = () => index + 1 === props.course.authors.length;
+	useEffect(() => {
+		const isListFetched = Boolean(authorsList[0].name);
+		if (isListFetched) {
+			course.authors.forEach((auth) => {
+				setAuthors((oldArr) => [
+					...oldArr,
+					authorsList.find((a) => a.id === auth).name,
+				]);
+			});
+		}
+	}, [authorsList, course.authors]);
 
-			return (
-				<span key={author}>{`${authorName}${
-					!isLastAuthor() ? ', ' : ''
-				}`}</span>
-			);
-		});
-	};
+	const isLastAuthor = (i) => i + 1 === course.authors.length;
 
 	return (
 		<section className={classes.card}>
 			<div className={classes.description}>
-				<h1>{props.course.title}</h1>
-				<p>{props.course.description}</p>
+				<h1>{course.title}</h1>
+				<p>{course.description}</p>
 			</div>
 			<div className={classes.info}>
-				<h3>Authors: {renderAuthors()}</h3>
-				<h3>
-					<span>{`${formatDuration(props.course.duration)}hours`}</span>
-				</h3>
-				<h3>
-					Created: <span>{convertDate(props.course.creationDate)}</span>
-				</h3>
-				<Button
-					buttonText={BUTTON_SHOW_COURSE}
-					onClick={() => history.push(`/courses/${props.course.id}`)}
-				/>
+				<label>
+					<b>Authors:</b> {''}
+					{authors.map((author, index) => {
+						return (
+							<span key={course.authors[index]}>{`${author}${
+								!isLastAuthor(index) ? ', ' : ''
+							}`}</span>
+						);
+					})}
+				</label>
+				<label>
+					<b>Duration: </b>
+					<span>{`${formatDuration(course.duration)}hours`}</span>
+				</label>
+				<label>
+					<b>Created:</b> <span>{convertDate(course.creationDate)}</span>
+				</label>
+				<div>
+					<Button
+						buttonText={constants.BUTTON_SHOW_COURSE}
+						onClick={() => history.push(`/courses/${course.id}`)}
+					/>
+					<Button buttonText={constants.BUTTON_EDIT} />
+					<Button
+						buttonText={constants.BUTTON_DELETE}
+						onClick={() => dispatch(actionDeleteCourse(course.id))}
+					/>
+				</div>
 			</div>
 		</section>
 	);
@@ -58,12 +82,6 @@ CourseCard.propTypes = {
 		duration: PropTypes.number,
 		authors: PropTypes.arrayOf(PropTypes.string),
 	}),
-	authorsList: PropTypes.arrayOf(
-		PropTypes.exact({
-			id: PropTypes.string,
-			name: PropTypes.string,
-		})
-	),
 };
 
 export default CourseCard;

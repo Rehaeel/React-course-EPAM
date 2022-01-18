@@ -1,48 +1,39 @@
-import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { actionLogOut } from '../../store/user/actionCreators';
 
 import styles from './Header.module.css';
 import Button from '../../common/Button/Button';
 import { Logo } from './components/Logo/Logo';
 import { BUTTON_LOGOUT } from '../../constants';
+import { selectUser } from '../../store/selector';
 
-const Header = ({ onLogout, isLogged }) => {
+const Header = () => {
 	const history = useHistory();
-	const [shouldRender, setShouldRender] = useState(false);
+	const dispatch = useDispatch();
 
-	useEffect(() => {
-		const allowed =
-			!(window.location.pathname === '/login') &&
-			!(window.location.pathname === '/registration');
-
-		setShouldRender(allowed);
-	}, [shouldRender, isLogged]);
+	const user = useSelector(selectUser);
 
 	const onLogoutHandler = () => {
-		setShouldRender(false);
+		dispatch(actionLogOut());
+
 		window.localStorage.removeItem('token');
 		window.localStorage.removeItem('name');
-		onLogout(false);
 		history.push('/login');
 	};
 
 	return (
 		<header className={styles.header}>
 			<Logo />
-			{shouldRender && (
+			{user.isAuth && (
 				<div>
-					<h1>{window.localStorage.getItem('name')}</h1>
+					<h1>{user.name}</h1>
 					<Button buttonText={BUTTON_LOGOUT} onClick={onLogoutHandler} />
 				</div>
 			)}
 		</header>
 	);
-};
-
-Header.propTypes = {
-	onLogout: PropTypes.func,
-	isLogged: PropTypes.bool,
 };
 
 export default Header;

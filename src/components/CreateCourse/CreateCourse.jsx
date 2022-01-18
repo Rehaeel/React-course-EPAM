@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
+import { actionAddAuthor } from '../../store/authors/actionCreators';
+import { actionAddCourse } from '../../store/courses/actionCreators';
+import { selectAuthors, selectCourses } from '../../store/selector';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -8,36 +11,27 @@ import classes from './CreateCourse.module.css';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 import { formatCreationDate } from '../../helpers/dateGenerator';
-
-import {
-	BUTTON_ADD_AUTHOR,
-	BUTTON_CREATE_AUTHOR,
-	BUTTON_CREATE_COURSE,
-	BUTTON_DELETE_AUTHOR,
-	LABEL_ADD_AUTHOR_NAME,
-	LABEL_ADD_COURSE_DURATION,
-	LABEL_ADD_COURSE_TITLE,
-	mockedAuthorsList,
-	mockedCoursesList,
-	PLACEHOLDER_ADD_AUTHOR_NAME,
-	PLACEHOLDER_ADD_COURSE_DESCRIPTION,
-	PLACEHOLDER_ADD_COURSE_DURATION,
-	PLACEHOLDER_ADD_COURSE_TITLE,
-} from '../../constants';
 import { formatDuration } from '../../helpers/formatters';
 
-const CreateCourse = (props) => {
-	const history = useHistory();
+import * as constants from '../../constants';
 
-	const [title, setTitle] = useState('');
+const CreateCourse = () => {
+	const history = useHistory();
+	const dispatch = useDispatch();
+
+	const authorsList = useSelector(selectAuthors);
+	const coursesList = useSelector(selectCourses);
+
 	const titleRef = useRef();
-	const [description, setDescription] = useState('');
+	useEffect(() => {
+		titleRef.current.focus();
+	}, []);
 	const descriptionRef = useRef();
 	const [durationOutput, setDurationOutput] = useState(0);
 	const [duration, setDuration] = useState(0);
-	const durationRef = useRef();
+	useEffect(() => setDurationOutput(formatDuration(duration)), [duration]);
 
-	const [authors, setAuthors] = useState(props.authorsList);
+	const [authors, setAuthors] = useState(authorsList);
 	const [courseAuthors, setCourseAuthors] = useState([]);
 	const authorNameRef = useRef();
 
@@ -45,19 +39,17 @@ const CreateCourse = (props) => {
 		titleRef.current.value = '';
 		descriptionRef.current.value = '';
 		authorNameRef.current.value = '';
-		durationRef.current.value = '';
+		setDuration(0);
 		setCourseAuthors([]);
-		setAuthors(props.authorsList);
+		setAuthors(authorsList);
 	};
-
-	useEffect(() => setDurationOutput(formatDuration(duration)), [duration]);
 
 	const createAuthor = (e) => {
 		e.preventDefault();
 
 		const author = {
-			id: uuidv4(),
 			name: authorNameRef.current.value.toString(),
+			id: uuidv4(),
 		};
 
 		const isAuthExist =
@@ -69,11 +61,8 @@ const CreateCourse = (props) => {
 			return alert('Author name should be at least 2 characters');
 
 		authorNameRef.current.value = '';
-		mockedAuthorsList.push(author);
-		props.onAddAuthor(author);
-
-		//because of task to add author to mockedAuthorsList - have to check if exist
-		if (isAuthExist) setAuthors((oldAuthors) => [...oldAuthors, author]);
+		dispatch(actionAddAuthor(author));
+		setAuthors((oldAuthors) => [...oldAuthors, author]);
 	};
 
 	const addCourseAuthor = (id) => {
@@ -99,7 +88,7 @@ const CreateCourse = (props) => {
 		const someFieldsEmpty =
 			titleRef.current.value === '' ||
 			descriptionRef.current.value === '' ||
-			durationRef.current.value === '' ||
+			duration === '' ||
 			courseAuthors.length === 0;
 
 		if (someFieldsEmpty) return alert('Please, fill in all fields');
@@ -107,26 +96,23 @@ const CreateCourse = (props) => {
 		let errorMessage = '';
 		if (descriptionRef.current.value.toString().length <= 2)
 			errorMessage += 'Description should have at least 2 characters';
-		if (
-			!Number.isInteger(+durationRef.current.value) ||
-			+durationRef.current.value <= 0
-		)
+		if (!Number.isInteger(+duration) || +duration <= 0)
 			errorMessage += `\nDuration should be positive number`;
 		if (errorMessage) return alert(errorMessage);
 
 		const newCourse = {
 			id: uuidv4(),
-			title: title.toString(),
-			description: description.toString(),
+			title: titleRef.current.value.toString(),
+			description: descriptionRef.current.value.toString(),
 			creationDate: formatCreationDate(),
 			duration: +duration,
 			authors: courseAuthors.map((auth) => auth.id.toString()),
 		};
 
-		mockedCoursesList.push(newCourse);
-		props.onCreateCourse(newCourse);
-		initialState();
+		if (coursesList.includes(newCourse)) return;
 
+		dispatch(actionAddCourse(newCourse));
+		initialState();
 		history.push('/courses');
 	};
 
@@ -135,13 +121,12 @@ const CreateCourse = (props) => {
 			<section className={classes.info}>
 				<div className={classes.title}>
 					<Input
-						labelText={LABEL_ADD_COURSE_TITLE}
-						onChange={(e) => setTitle(e.target.value)}
-						placeholderText={PLACEHOLDER_ADD_COURSE_TITLE}
+						labelText={constants.LABEL_ADD_COURSE_TITLE}
+						placeholderText={constants.PLACEHOLDER_ADD_COURSE_TITLE}
 						thisRef={titleRef}
 					/>
 					<Button
-						buttonText={BUTTON_CREATE_COURSE}
+						buttonText={constants.BUTTON_CREATE_COURSE}
 						onClick={onSubmitAddCourse}
 						to='/courses'
 					/>
@@ -149,8 +134,7 @@ const CreateCourse = (props) => {
 				<label>
 					Description
 					<textarea
-						placeholder={PLACEHOLDER_ADD_COURSE_DESCRIPTION}
-						onChange={(e) => setDescription(e.target.value)}
+						placeholder={constants.PLACEHOLDER_ADD_COURSE_DESCRIPTION}
 						ref={descriptionRef}
 					/>
 				</label>
@@ -162,21 +146,23 @@ const CreateCourse = (props) => {
 						<h3>Add author</h3>
 						<form onSubmit={createAuthor}>
 							<Input
-								labelText={LABEL_ADD_AUTHOR_NAME}
-								placeholderText={PLACEHOLDER_ADD_AUTHOR_NAME}
+								labelText={constants.LABEL_ADD_AUTHOR_NAME}
+								placeholderText={constants.PLACEHOLDER_ADD_AUTHOR_NAME}
 								thisRef={authorNameRef}
 							/>
-							<Button buttonText={BUTTON_CREATE_AUTHOR} buttonType='submit' />
+							<Button
+								buttonText={constants.BUTTON_CREATE_AUTHOR}
+								buttonType='submit'
+							/>
 						</form>
 					</div>
 
 					<div>
 						<h3>Duration</h3>
 						<Input
-							labelText={LABEL_ADD_COURSE_DURATION}
-							placeholderText={PLACEHOLDER_ADD_COURSE_DURATION}
+							labelText={constants.LABEL_ADD_COURSE_DURATION}
+							placeholderText={constants.PLACEHOLDER_ADD_COURSE_DURATION}
 							onChange={(e) => setDuration(e.target.value)}
-							thisRef={durationRef}
 						/>
 						<h3 className={classes.duration}>
 							Duration:
@@ -195,7 +181,7 @@ const CreateCourse = (props) => {
 							<li key={auth.id}>
 								{auth.name}
 								<Button
-									buttonText={BUTTON_ADD_AUTHOR}
+									buttonText={constants.BUTTON_ADD_AUTHOR}
 									onClick={() => addCourseAuthor(auth.id)}
 								/>
 							</li>
@@ -208,7 +194,7 @@ const CreateCourse = (props) => {
 							<li key={auth.id}>
 								{auth.name}
 								<Button
-									buttonText={BUTTON_DELETE_AUTHOR}
+									buttonText={constants.BUTTON_DELETE_AUTHOR}
 									onClick={() => removeCourseAuthor(auth.id)}
 								/>
 							</li>
@@ -218,17 +204,6 @@ const CreateCourse = (props) => {
 			</section>
 		</section>
 	);
-};
-
-CreateCourse.propTypes = {
-	authorsList: PropTypes.arrayOf(
-		PropTypes.exact({
-			id: PropTypes.string,
-			name: PropTypes.string,
-		})
-	),
-	onAddAuthor: PropTypes.func,
-	onCreateCourse: PropTypes.func,
 };
 
 export default CreateCourse;
