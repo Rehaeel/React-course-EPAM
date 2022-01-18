@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import classes from './Button.module.css';
 
 const Button = (props) => {
@@ -10,6 +11,13 @@ const Button = (props) => {
 			{props.buttonText}
 		</button>
 	);
+};
+
+Button.propTypes = {
+	buttonType: PropTypes.string,
+	className: PropTypes.string,
+	onClick: PropTypes.func,
+	buttonText: PropTypes.string,
 };
 
 export default Button;

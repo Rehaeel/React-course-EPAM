@@ -1,0 +1,31 @@
+.centered-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: calc(var(--universal-gap) * 1.5);
+}
+
+.full-height-container {
+    height: calc(100vh - var(--header-height));
+}
+
+/***********************************************/
+
+.form-formatter * {
+    width: 300px;
+}
+
+.form-formatter > form > button {
+    width: fit-content;
+}
+
+.form-formatter > h1:first-of-type {
+    text-align: center;
+}
+
+.form-formatter > p {
+    text-align: center;
+    width: 100%;
+}

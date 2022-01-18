@@ -1,31 +1,14 @@
-import Button from '../../../../common/Button/Button';
-import { BUTTON_SHOW_COURSE } from '../../../../constants';
+import { useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
+
 import classes from './CourseCard.module.css';
 
+import Button from '../../../../common/Button/Button';
+import { BUTTON_SHOW_COURSE } from '../../../../constants';
+import { formatDuration, convertDate } from '../../../../helpers/formatters';
+
 const CourseCard = (props) => {
-	const padTwoPlaces = (input) => {
-		return input.toString().padStart(2, '0');
-	};
-
-	const convertDuration = () => {
-		const duration = props.course.duration;
-		const hours = Math.floor(duration / 60);
-		const mins = duration % 60;
-
-		return `${hours.toString().padStart(2, '0')}:${mins
-			.toString()
-			.padStart(2, '0')} hours`;
-	};
-
-	const convertDate = () => {
-		const date = props.course.creationDate;
-		let [day, month, year] = date.split('/');
-		day = padTwoPlaces(day);
-		month = padTwoPlaces(month);
-		year = padTwoPlaces(year);
-
-		return `${day}.${month}.${year}`;
-	};
+	const history = useHistory();
 
 	const renderAuthors = () => {
 		return props.course.authors.map((author, index) => {
@@ -52,15 +35,35 @@ const CourseCard = (props) => {
 			<div className={classes.info}>
 				<h3>Authors: {renderAuthors()}</h3>
 				<h3>
-					Duration: <span>{convertDuration()}</span>
+					<span>{`${formatDuration(props.course.duration)}hours`}</span>
 				</h3>
 				<h3>
-					Created: <span>{convertDate()}</span>
+					Created: <span>{convertDate(props.course.creationDate)}</span>
 				</h3>
-				<Button buttonText={BUTTON_SHOW_COURSE} />
+				<Button
+					buttonText={BUTTON_SHOW_COURSE}
+					onClick={() => history.push(`/courses/${props.course.id}`)}
+				/>
 			</div>
 		</section>
 	);
+};
+
+CourseCard.propTypes = {
+	course: PropTypes.exact({
+		id: PropTypes.string,
+		title: PropTypes.string,
+		description: PropTypes.string,
+		creationDate: PropTypes.string,
+		duration: PropTypes.number,
+		authors: PropTypes.arrayOf(PropTypes.string),
+	}),
+	authorsList: PropTypes.arrayOf(
+		PropTypes.exact({
+			id: PropTypes.string,
+			name: PropTypes.string,
+		})
+	),
 };
 
 export default CourseCard;

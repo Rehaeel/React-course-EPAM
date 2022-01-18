@@ -1,7 +1,7 @@
 .btn {
 	background-color: #fff;
 	border: none;
-	padding: 7px 15px;
+	padding: calc(var(--universal-gap) * 0.7) calc(var(--universal-gap) * 1.5);
 	border: 1.5px solid purple;
 	border-radius: 2px;
 	cursor: pointer;

@@ -1,8 +1,8 @@
 .add-course {
     display:flex;
     flex-direction: column;
-    margin: 20px;
-    gap: 20px;
+    margin: calc(var(--universal-gap) * 2);
+    gap: calc(var(--universal-gap) * 2);
 }
 
 .title {
@@ -19,20 +19,20 @@
 .info {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: calc(var(--universal-gap) * 2);
 }
 
 .info textarea {
     width: 100%;
-    margin-top: 10px;
+    margin-top: var(--universal-gap);
     min-height: 100px;
-    padding:15px; 
+    padding: calc(var(--universal-gap) * 1.5); 
     border: 2px solid yellow;
 }
 
 .details {
     border: 2px solid purple;
-    padding: 15px;
+    padding: calc(var(--universal-gap) * 1.5);
     display: grid;
     grid-template-columns: 1fr 1fr;
 }
@@ -41,14 +41,14 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 80px;
+    gap: calc(var(--universal-gap) * 8);
 }
 
 .addition > div,
 .addition > div > form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: var(--universal-gap);
 }
 .addition button {
     width: fit-content;
@@ -74,7 +74,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
+    gap: calc(var(--universal-gap) * 1.5);
 }
 
 .course-authors-list,
@@ -82,7 +82,7 @@
     width: min(300px, 80%);
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: calc(var(--universal-gap) / 2);
 }
 
 .course-authors-list li,
