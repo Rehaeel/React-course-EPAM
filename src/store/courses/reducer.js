@@ -1,6 +1,6 @@
 import * as actions from './actionTypes';
 
-const coursesInitialState = [];
+export const coursesInitialState = [];
 
 export const coursesReducer = (state = coursesInitialState, action) => {
 	switch (action.type) {

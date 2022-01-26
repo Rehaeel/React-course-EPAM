@@ -21,33 +21,36 @@ const CourseCard = ({ course }) => {
 	const isLastAuthor = (i) => i + 1 === course.authors.length;
 
 	return (
-		<section className={classes.card}>
+		<section className={classes.card} data-testid='course-card'>
 			<div className={classes.description}>
-				<h1>{course.title}</h1>
-				<p>{course.description}</p>
+				<h1 data-testid='course-title'>{course.title}</h1>
+				<p data-testid='course-description'>{course.description}</p>
 			</div>
 			<div className={classes.info}>
-				<label>
+				<div data-testid='course-authors'>
 					<b>Authors:</b> {''}
-					{course.authors
-						.map((auth) => {
-							const foundAuthor = authorsList.find((a) => auth === a.id);
-							if (!foundAuthor) return;
-							else return foundAuthor.name;
-						})
-						.map((author, index) => (
-							<span key={course.authors[index]}>{`${author}${
-								!isLastAuthor(index) ? ', ' : ''
-							}`}</span>
-						))}
-				</label>
-				<label>
+					<ul>
+						{authorsList
+							.filter((auth) => course.authors.find((a) => a === auth.id))
+							.map((author, index) => (
+								<li key={course.authors[index]}>{`${author.name}${
+									!isLastAuthor(index) ? `,` : ''
+								}`}</li>
+							))}
+					</ul>
+				</div>
+				<div>
 					<b>Duration: </b>
-					<span>{`${formatDuration(course.duration)}hours`}</span>
-				</label>
-				<label>
-					<b>Created:</b> <span>{convertDate(course.creationDate)}</span>
-				</label>
+					<span data-testid='course-duration'>{`${formatDuration(
+						course.duration
+					)}hours`}</span>
+				</div>
+				<div>
+					<b>Created:</b>{' '}
+					<span data-testid='course-created-date'>
+						{convertDate(course.creationDate)}
+					</span>
+				</div>
 				<div>
 					<Button
 						buttonText={constants.BUTTON_SHOW_COURSE}

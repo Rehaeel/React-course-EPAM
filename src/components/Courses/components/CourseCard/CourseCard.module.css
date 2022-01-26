@@ -12,18 +12,23 @@
 	gap: 10px;
 }
 
+.info ul {
+	display: inline-flex;
+	gap: 0.3em;
+}
+
 .info > button {
 	width: fit-content;
 	align-self: center;
 }
 
-.info > label:first-of-type {
+.info > div:first-of-type {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
 
-.info > div {
+.info > div:last-of-type {
 	display: flex;
 	gap: var(--universal-gap);
 	justify-content: end;

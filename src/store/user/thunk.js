@@ -5,7 +5,7 @@ import { actionLogIn, actionLogOut, actionSetUser } from './actionCreators';
 
 export const getCurrentUserThunk = (token) => async (dispatch, _) => {
 	return await queries
-		.fetchedUserQuery(token)
+		.fetchUserQuery(token)
 		.then((res) => res.data.result)
 		.then((user) => {
 			dispatch(actionSetUser(user.role));
@@ -23,9 +23,9 @@ export const logInUserThunk = (account) => async (dispatch, _) => {
 			return token;
 		})
 		.then((token) => dispatch(getCurrentUserThunk(token)))
-		.then(() => queries.fetchedCoursesQuery())
+		.then(() => queries.fetchCoursesQuery())
 		.then((res) => dispatch(actionFetchAllCourses(res.data.result)))
-		.then(() => queries.fetchedAuthorsQuery())
+		.then(() => queries.fetchAuthorsQuery())
 		.then((res) => dispatch(actionFetchAllAuthors(res.data.result)));
 };
 

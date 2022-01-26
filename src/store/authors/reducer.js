@@ -1,6 +1,6 @@
 import * as actions from './actionTypes';
 
-const authorsInitialState = [{ id: '', name: '' }];
+export const authorsInitialState = [{ id: '', name: '' }];
 
 const isPresent = (state, author) =>
 	state.indexOf((auth) => auth.name === author.name) !== -1;

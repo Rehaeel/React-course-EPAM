@@ -109,8 +109,7 @@ const CourseForm = () => {
 		const someFieldsEmpty =
 			titleRef.current.value === '' ||
 			descriptionRef.current.value === '' ||
-			duration === '' ||
-			courseAuthors.length === 0;
+			duration === '';
 
 		if (someFieldsEmpty) return alert('Please, fill in all fields');
 
@@ -139,7 +138,7 @@ const CourseForm = () => {
 	};
 
 	return (
-		<section className={classes['add-course']}>
+		<section className={classes['add-course']} data-testid='course-form'>
 			<section className={classes.info}>
 				<div className={classes.title}>
 					<Input
@@ -203,7 +202,7 @@ const CourseForm = () => {
 
 				<div className={classes.authors}>
 					<h3>Authors</h3>
-					<ul className={classes['course-authors-list']}>
+					<ul className={classes['course-authors-list']} data-testid='authors'>
 						{authors.map((auth) => (
 							<li key={auth.id}>
 								{auth.name}
@@ -217,9 +216,12 @@ const CourseForm = () => {
 
 					<h3>Course authors</h3>
 					{courseAuthors.length === 0 ? (
-						<h4>Author list is empty</h4>
+						<h4>Course Authors list is empty</h4>
 					) : (
-						<ul className={classes['course-authors']}>
+						<ul
+							className={classes['course-authors']}
+							data-testid='course-authors'
+						>
 							{courseAuthors.map((auth) => (
 								<li key={auth.id}>
 									{auth.name}
