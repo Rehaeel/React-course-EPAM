@@ -13,13 +13,11 @@ const config = (token) => ({
 	},
 });
 
-export const fetchedCoursesQuery = () =>
-	axios.get(`${BACKEND_URL}/courses/all`);
+export const fetchCoursesQuery = () => axios.get(`${BACKEND_URL}/courses/all`);
 
-export const fetchedAuthorsQuery = () =>
-	axios.get(`${BACKEND_URL}/authors/all`);
+export const fetchAuthorsQuery = () => axios.get(`${BACKEND_URL}/authors/all`);
 
-export const fetchedUserQuery = (token) =>
+export const fetchUserQuery = (token) =>
 	axios.get(`${BACKEND_URL}/users/me`, config(token));
 
 export const logInUserQuery = (account) =>

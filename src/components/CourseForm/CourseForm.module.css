@@ -25,7 +25,8 @@
 .info textarea {
     width: 100%;
     margin-top: var(--universal-gap);
-    min-height: 100px;
+    min-height: 250px;
+    resize: vertical;
     padding: calc(var(--universal-gap) * 1.5); 
     border: 2px solid yellow;
 }

@@ -21,6 +21,8 @@ import { actionFetchAllCourses } from './store/courses/actionCreators';
 import * as queries from './store/services';
 import { getCurrentUserThunk } from './store/user/thunk';
 
+import store from './store/index';
+
 function App() {
 	const dispatch = useDispatch();
 
@@ -32,16 +34,17 @@ function App() {
 			dispatch(getCurrentUserThunk(token)).catch(queries.handdleError);
 
 			queries
-				.fetchedCoursesQuery()
+				.fetchCoursesQuery()
 				.then((res) => dispatch(actionFetchAllCourses(res.data.result)))
 				.catch(queries.handdleError);
 			queries
-				.fetchedAuthorsQuery()
+				.fetchAuthorsQuery()
 				.then((res) => {
 					dispatch(actionFetchAllAuthors(res.data.result));
 				})
 				.catch(queries.handdleError);
 		}
+		console.log(store.getState());
 	}, [hasToken, dispatch, token]);
 
 	return (
